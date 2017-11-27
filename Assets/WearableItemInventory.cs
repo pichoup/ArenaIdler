@@ -28,23 +28,31 @@ public class WearableItemInventory : MonoBehaviour {
         if (inventoryItems[itemId] > 0)
         {
             inventoryItems[itemId] -= 1;
-            AddItemToInventory(character.EquipItem(itemId));
+            RemoveItemFromInventory(character.EquipItem(itemId));
+            character.EquipItem(itemId);
         }
 
     }
-
 
     public void AddItemToInventory(int? wearableItemId, int amount = 1)
     {
         //check inventory space at some point
 
-        if (wearableItemId != 0)
+        if (wearableItemId != null)
         {
             inventoryItems[(int)wearableItemId] += amount;
         }
     }
 
-    public void RemoveItemFromInventory(int wearableItemId, int amount = 1)
+    public void RemoveItemFromInventory(int? wearableItemId, int amount = 1)
+    {
+        if (wearableItemId != null)
+        {
+            inventoryItems[(int)wearableItemId] -= amount;
+        }
+    }
+
+    private void UpdateInventoryDisplay()
     {
 
     }
