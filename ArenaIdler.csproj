@@ -80,6 +80,8 @@
   <ItemGroup>
     <Compile Include="Assets\Character.cs" />
     <Compile Include="Assets\CreateWearableItemDatabase.cs" />
+    <Compile Include="Assets\InventoryItemButton.cs" />
+    <Compile Include="Assets\SimpleObjectPool.cs" />
     <Compile Include="Assets\WearableItem.cs" />
     <Compile Include="Assets\WearableItemDatabase.cs" />
     <Compile Include="Assets\WearableItemEditor.cs" />

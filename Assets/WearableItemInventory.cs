@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class WearableItemInventory : MonoBehaviour {
 
@@ -9,6 +10,8 @@ public class WearableItemInventory : MonoBehaviour {
     public int inventorySize;
     public Character character;
     public WearableItemDatabase wearableDB;
+    public SimpleObjectPool buttonObjectPool;
+    public Transform contentPanel;
 
     void Start()
     {
@@ -21,15 +24,16 @@ public class WearableItemInventory : MonoBehaviour {
         {
             inventoryItems.Add(wearableDB.wearableItemDatabase[i].id, 0);
         }
+
+        UpdateInventoryDisplay();
     }
 
     public void EquipItemFromInventory(int itemId)
     {
         if (inventoryItems[itemId] > 0)
         {
-            inventoryItems[itemId] -= 1;
-            RemoveItemFromInventory(character.EquipItem(itemId));
-            character.EquipItem(itemId);
+            AddItemToInventory(character.EquipItem(itemId));
+            RemoveItemFromInventory(itemId);
         }
 
     }
@@ -54,6 +58,34 @@ public class WearableItemInventory : MonoBehaviour {
 
     private void UpdateInventoryDisplay()
     {
+        RemoveInventoryItems();
+        AddInventoryItems();
+    }
 
+    private void RemoveInventoryItems()
+    {
+        while (contentPanel.childCount > 0)
+        {
+            GameObject toRemove = transform.GetChild(0).gameObject;
+            buttonObjectPool.ReturnObject(toRemove);
+        }
+    }
+
+    private void AddInventoryItems()
+    {
+        foreach (int key in inventoryItems.Keys)
+        {
+            //if quantity > 0
+            if (inventoryItems[key] > 0)
+            {
+                WearableItem item = wearableDB.wearableItemDatabase.First(x => x.id == key);
+
+                GameObject newButton = buttonObjectPool.GetObject();
+                newButton.transform.SetParent(contentPanel);
+
+                InventoryItemButton itemButton = newButton.GetComponent<InventoryItemButton>();
+                itemButton.Setup(item, this);
+            }
+        }
     }
 }
